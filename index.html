@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>엄마 아빠의 트로트 퀴즈</title>
+<style>
+:root{--bg:#fbf5ea;--ink:#2d2118;--wine:#8c2f39;--wine2:#b4424d;--gold:#c9a15b;--sage:#3f7d63;--navy:#2f4b73;--card:#ffffff;--soft:#f3e9d6;--mute:#7a6755}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#fff 0,var(--bg) 60%);color:var(--ink);font-family:"Pretendard","Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:26px;line-height:1.45;min-height:100vh;letter-spacing:-.01em}
+.screen{display:none;max-width:620px;margin:0 auto;padding:28px 20px 48px;text-align:center}
+.screen.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.logo{width:104px;height:104px;margin:8px auto 0;border-radius:50%;display:grid;place-items:center;font-size:52px;background:linear-gradient(145deg,var(--wine2),var(--wine));box-shadow:0 14px 30px -10px rgba(140,47,57,.55)}
+h1{font-size:40px;line-height:1.25;margin:22px 0 8px;font-weight:800;color:var(--ink);font-family:"Nanum Myeongjo","Noto Serif KR",serif}
+h1::after{content:"";display:block;width:56px;height:4px;border-radius:4px;background:var(--gold);margin:16px auto 0}
+.sub{font-size:24px;color:var(--mute);margin:14px 0 26px}
+button{font-family:inherit;cursor:pointer;border:0;color:#fff;font-weight:700;transition:transform .12s,box-shadow .12s}
+.big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;font-size:32px;padding:26px 14px;margin:16px 0;border-radius:22px;background:linear-gradient(145deg,var(--wine2),var(--wine));box-shadow:0 14px 26px -12px rgba(140,47,57,.6)}
+.big.b2{background:linear-gradient(145deg,#4a6b9b,var(--navy));box-shadow:0 14px 26px -12px rgba(47,75,115,.6)}
+.big.b3{background:linear-gradient(145deg,#52977b,var(--sage));box-shadow:0 14px 26px -12px rgba(63,125,99,.6)}
+.big:active,.opt:active,.tools button:active{transform:scale(.98)}
+.big small{display:block;font-size:22px;font-weight:500;opacity:.9}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:24px;font-weight:700;color:var(--mute)}
+.top #prog{background:var(--soft);padding:6px 16px;border-radius:999px;color:var(--ink)}
+.turn{background:var(--ink);color:#fff;border-radius:999px;padding:8px 22px;display:inline-block;margin:16px 0 8px;font-size:26px;font-weight:700}
+.card{background:var(--card);border-radius:28px;padding:26px 18px;margin:12px 0 16px;box-shadow:0 20px 40px -22px rgba(60,40,20,.35),0 0 0 1px rgba(201,161,91,.35)}
+.singer{font-size:30px;font-weight:800;color:var(--accent);margin-top:6px}
+.title{font-size:46px;font-weight:800;margin:14px 0 6px;word-break:keep-all;line-height:1.25;font-family:"Nanum Myeongjo","Noto Serif KR",serif}
+.blank{display:inline-block;min-width:3em;border-bottom:5px solid var(--gold);color:transparent}
+.q{font-size:22px;color:var(--mute)}
+.desc{font-size:24px;line-height:1.55;color:var(--mute);margin-top:14px;word-break:keep-all;background:var(--soft);border-radius:18px;padding:14px 16px}
+.desc:empty{display:none}
+.opt{display:block;width:100%;font-size:36px;padding:22px 10px;margin:14px 0;border-radius:20px;background:#fff;color:var(--ink);font-weight:800;box-shadow:0 0 0 2px rgba(201,161,91,.55),0 10px 20px -14px rgba(60,40,20,.4)}
+.opt:disabled{background:#efe7d9;color:#b3a591;box-shadow:none}
+.opt.ok{background:var(--sage);color:#fff;box-shadow:0 14px 26px -12px rgba(63,125,99,.6)}
+.tools{display:flex;gap:12px}
+.tools button{flex:1;font-size:24px;padding:16px 4px;background:var(--soft);color:var(--ink);border-radius:18px}
+.msg{min-height:44px;font-size:26px;font-weight:700;color:var(--accent);margin:10px 0 0}
+.hint{min-height:36px;font-size:28px;color:var(--gold);font-weight:800;letter-spacing:.15em;margin-top:8px}
+#pop{position:fixed;inset:0;background:rgba(45,33,24,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#pop.on{display:flex;animation:fade .25s}
+.pbox{background:#fff;border-radius:32px;padding:34px 22px 26px;max-width:540px;width:100%;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+.pbox{text-align:center}
+.pbox .emo{font-size:78px}
+.pbox .t{font-size:36px;font-weight:800;color:var(--accent);margin:10px 0 20px;font-family:"Nanum Myeongjo","Noto Serif KR",serif}
+.score{display:flex;gap:14px;justify-content:center;margin:20px 0}
+.sbox{flex:1;background:#fff;border-radius:24px;padding:18px 8px;font-size:26px;font-weight:700;color:var(--mute);box-shadow:0 0 0 2px rgba(201,161,91,.5)}
+.sbox span{display:block;font-size:56px;color:var(--accent);font-weight:800}
+.home{background:var(--soft);color:var(--ink);font-size:22px;padding:10px 18px;border-radius:999px}
+
+.logo{background:repeating-radial-gradient(circle at 50% 50%,#2a1d17 0 3px,#3a2a22 3px 6px);box-shadow:0 18px 34px -12px rgba(45,33,24,.6),inset 0 0 0 4px #1f1511;position:relative}
+.logo::before{content:'';position:absolute;inset:30%;border-radius:50%;background:linear-gradient(145deg,var(--wine2),var(--wine));box-shadow:0 0 0 3px var(--gold)}
+.logo span{position:relative;font-size:34px;z-index:1}
+.bar{height:10px;border-radius:99px;background:var(--soft);margin:16px 4px 0;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--wine2));transition:width .4s ease}
+#opts{counter-reset:o}
+.opt{counter-increment:o;position:relative}
+.opt::before{content:counter(o);position:absolute;left:16px;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:26px;font-weight:800}
+.opt.ok::before{background:rgba(255,255,255,.25);color:#fff}
+.card{border-top:6px solid var(--wine);background:linear-gradient(180deg,#fffaf0,#fff 40%)}
+.top .home{box-shadow:0 0 0 1px rgba(201,161,91,.5)}
+.turn{background:linear-gradient(135deg,var(--wine2),var(--wine));box-shadow:0 10px 20px -10px rgba(140,47,57,.6)}
+
+.onair{display:inline-flex;align-items:center;gap:8px;margin:14px 0 0;font-size:18px;font-weight:800;letter-spacing:.08em;color:var(--accent)}
+.onair i{width:12px;height:12px;border-radius:50%;background:#e5372f;box-shadow:0 0 0 4px rgba(229,55,47,.25);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.cho{display:inline-block;letter-spacing:.18em;color:var(--accent);font-family:inherit}
+.listen{display:block;width:100%;margin:12px 0 0;padding:16px;font-size:24px;border-radius:18px;background:linear-gradient(145deg,#2d2118,#4a3526);box-shadow:0 12px 22px -12px rgba(45,33,24,.7)}
+.rank{display:inline-block;margin:6px 0 4px;padding:10px 26px;border-radius:999px;font-size:30px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--gold),#a97c2f);box-shadow:0 12px 22px -12px rgba(169,124,47,.8)}
+.rank span{margin-right:6px}
+
+#start.screen{max-width:none;min-height:100vh;padding:0 0 40px;position:relative;overflow:hidden;color:#fff;
+ background:radial-gradient(900px 520px at 50% -8%,rgba(255,214,140,.38),transparent 60%),radial-gradient(700px 500px at 50% 105%,rgba(180,66,77,.35),transparent 60%),linear-gradient(180deg,#2e1016,#160a0d 70%)}
+#start::before,#start::after{content:'';position:absolute;top:-40px;width:260px;height:700px;opacity:.16;pointer-events:none;background:linear-gradient(180deg,#ffe3a8,transparent 80%)}
+#start::before{left:6%;transform:rotate(18deg);clip-path:polygon(45% 0,55% 0,100% 100%,0 100%)}
+#start::after{right:6%;transform:rotate(-18deg);clip-path:polygon(45% 0,55% 0,100% 100%,0 100%)}
+.lights{display:flex;justify-content:space-around;padding:16px 10px 0}
+.lights i{width:14px;height:14px;border-radius:50%;background:#ffd98a;box-shadow:0 0 14px 4px rgba(255,217,138,.7);animation:tw 1.6s infinite}
+.lights i:nth-child(even){animation-delay:.8s}
+@keyframes tw{50%{opacity:.25;box-shadow:0 0 4px 1px rgba(255,217,138,.3)}}
+.cover-in{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:10px 22px 0;text-align:center}
+.eyebrow{margin-top:10px;font-size:22px;letter-spacing:.14em;color:#ffd98a;font-weight:700}
+.vinyl{width:132px;height:132px;margin:20px auto 4px;border-radius:50%;display:grid;place-items:center;position:relative;
+ background:repeating-radial-gradient(circle,#0e0708 0 3px,#24161a 3px 6px);box-shadow:0 0 0 4px #c9a15b,0 24px 40px -10px rgba(0,0,0,.7);animation:spin 9s linear infinite}
+.vinyl::before{content:'';position:absolute;inset:34%;border-radius:50%;background:linear-gradient(145deg,#d65a66,#8c2f39);box-shadow:0 0 0 3px #ffd98a}
+.vinyl span{position:relative;z-index:1;font-size:30px;animation:spin 9s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cover-title{margin:18px 0 6px;font-size:50px;line-height:1.2;font-weight:800;color:#ffe3a8;text-shadow:0 3px 0 #8c2f39,0 10px 30px rgba(0,0,0,.5);font-family:'Nanum Myeongjo','Noto Serif KR',serif}
+.cover-title::after{display:none}
+.tag{font-size:23px;line-height:1.55;color:#f1ddc0;margin-bottom:22px}
+.tag b{color:#ffd98a;font-size:26px}
+.pick{font-size:22px;color:#ffd98a;margin-bottom:6px;letter-spacing:.04em}
+.cbtn{display:flex;align-items:center;gap:16px;width:100%;margin:14px 0;padding:20px 22px;border-radius:22px;text-align:left;color:#fff;
+ background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.05));box-shadow:inset 0 0 0 2px rgba(255,217,138,.55),0 16px 30px -16px rgba(0,0,0,.8);backdrop-filter:blur(2px)}
+.cbtn em{font-style:normal;font-size:44px;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12)}
+.cbtn span{font-size:32px;font-weight:800;line-height:1.25}
+.cbtn small{display:block;font-size:21px;font-weight:500;color:#f1ddc0;margin-top:2px}
+.cbtn.gold{background:linear-gradient(145deg,#e6bd6a,#b98a35);color:#2b1a0e;box-shadow:0 18px 32px -14px rgba(0,0,0,.8)}
+.cbtn.gold em{background:rgba(255,255,255,.35)}.cbtn.gold small{color:#5a3d17}
+.cbtn:active{transform:scale(.98)}
+
+/* ===== 다크 무대 테마 (표지와 통일) ===== */
+:root{--bg:#160a0d;--ink:#fbeed6;--card:#2a141a;--soft:#3b1f26;--mute:#d8c0a0;--accent:#ffd98a}
+body{background:radial-gradient(900px 520px at 50% -8%,rgba(255,214,140,.22),transparent 60%),radial-gradient(700px 500px at 50% 105%,rgba(180,66,77,.28),transparent 60%),linear-gradient(180deg,#2e1016,#160a0d 70%) fixed;color:var(--ink)}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:26px;z-index:-1;opacity:.85;background:radial-gradient(circle,#ffd98a 0 4px,rgba(255,217,138,.35) 5px,transparent 9px) 0 0/44px 26px repeat-x}
+h1{color:#ffe3a8;text-shadow:0 3px 0 #8c2f39,0 10px 30px rgba(0,0,0,.45)}
+.sub{color:var(--mute)}
+.screen{padding-top:44px}
+#start.screen{padding-top:0}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.04));border-top:0;box-shadow:inset 0 0 0 2px rgba(255,217,138,.5),0 22px 40px -22px rgba(0,0,0,.8)}
+.title{color:#fff3da;text-shadow:0 2px 0 rgba(140,47,57,.8)}
+.cho{color:var(--accent)}
+.blank{border-bottom-color:var(--accent)}
+.desc{background:rgba(255,255,255,.08);color:#f1ddc0}
+.q{color:var(--mute)}
+.top{color:var(--mute)}
+.top #prog{background:rgba(255,255,255,.1);color:var(--ink)}
+.top .home{background:rgba(255,255,255,.1);color:var(--ink);box-shadow:inset 0 0 0 1px rgba(255,217,138,.5)}
+.bar{background:rgba(255,255,255,.12)}
+.tools button{background:rgba(255,255,255,.1);color:var(--ink);box-shadow:inset 0 0 0 1px rgba(255,217,138,.4)}
+.listen{background:linear-gradient(145deg,#e6bd6a,#b98a35);color:#2b1a0e}
+.hint{color:var(--accent)}
+.opt{background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.05));color:#fff;box-shadow:inset 0 0 0 2px rgba(255,217,138,.55),0 14px 26px -16px rgba(0,0,0,.8)}
+.opt::before{background:rgba(255,217,138,.18);color:var(--accent)}
+.opt:disabled{background:rgba(255,255,255,.04);color:rgba(255,255,255,.3);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.opt.ok{background:linear-gradient(145deg,#52977b,#3f7d63);color:#fff}
+.opt.ok::before{background:rgba(255,255,255,.25);color:#fff}
+#pop{background:rgba(10,4,6,.7)}
+.pbox{background:linear-gradient(180deg,#3b1f26,#2a141a);box-shadow:inset 0 0 0 2px rgba(255,217,138,.6),0 30px 60px -20px rgba(0,0,0,.8)}
+.pbox .t{color:#ffe3a8}
+.sbox{background:rgba(255,255,255,.08);color:var(--mute);box-shadow:inset 0 0 0 2px rgba(255,217,138,.5)}
+.sbox span{color:var(--accent)}
+.rank{color:#2b1a0e}
+.msg{color:#ff9aa5}
+
+/* ===== 개선: 화면 압축, 자리 고정, 확인창 ===== */
+.top .home{font-size:20px;padding:8px 14px}
+.top{font-size:22px}
+.bar{margin:12px 4px 0}
+.turn{margin:12px 0 6px;font-size:22px;padding:6px 20px}
+.turn::before{content:'';display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff5a4f;margin-right:10px;animation:blink 1.2s infinite}
+.card{padding:16px 14px;margin:8px 0 12px}
+.q{font-size:20px}
+.singer{font-size:26px;margin-top:2px}
+.title{font-size:40px;margin:8px 0 2px;text-wrap:balance;word-break:keep-all}
+.desc{font-size:21px;padding:10px 12px;margin-top:8px;line-height:1.4;text-wrap:balance}
+.slot{min-height:34px;font-size:22px;font-weight:700;color:var(--accent);margin-top:8px;line-height:34px}
+.slot.bad{color:#ff9aa5}
+.tools button{font-size:21px;padding:12px 6px}
+.opt{font-size:32px;padding:16px 56px;margin:10px 0;line-height:1.25}
+.opt::before{width:40px;height:40px;font-size:22px}
+.opt.gone{opacity:.35;text-decoration:line-through}
+#quit{position:fixed;inset:0;background:rgba(10,4,6,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+#quit.on{display:flex}
+.ans{font-size:22px;color:var(--mute);margin:-4px 0 16px;line-height:1.5}
+.ans b{display:block;font-size:30px;color:var(--accent);margin-bottom:2px}
+.ans small{font-size:21px}
+.pbox .listen{margin:0 0 6px}
+.pbox .big{margin:12px 0 0}
+.desc{margin-top:6px}
+.opt{padding:14px 52px;margin:8px 0;font-size:31px}
+.opt{padding:14px 14px 14px 62px;text-align:left}
+.opt{text-align:center;padding:14px 14px 14px 62px}
+.cho{letter-spacing:.06em}
+.title:has(.cho){font-size:34px}
+
+/* ===== 중간 개선 ===== */
+body{word-break:keep-all;overflow-wrap:break-word}
+.sbox small{display:block;font-size:19px;font-weight:600;margin-top:4px}
+.review{margin:18px 0 6px;text-align:left}
+.rvh{font-size:23px;font-weight:800;color:var(--accent);text-align:center;margin-bottom:10px}
+.rv{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 16px;margin:8px 0;border-radius:16px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,217,138,.35);font-size:23px}
+.rv b{color:#fff3da}.rv span{color:var(--mute);font-size:20px;white-space:nowrap}
+.lights{padding-top:10px}
+.eyebrow{margin-top:2px;font-size:19px}
+.vinyl{width:96px;height:96px;margin:10px auto 0}
+.vinyl span{font-size:24px}
+.cover-title{font-size:42px;margin:10px 0 4px}
+.tag{font-size:20px;margin-bottom:12px}
+.tag b{font-size:22px}
+.pick{font-size:19px;margin-bottom:0}
+.cbtn{margin:10px 0;padding:14px 18px}
+.cbtn em{font-size:36px;width:54px;height:54px}
+.cbtn span{font-size:28px}
+.cbtn small{font-size:19px}
+
+/* ===== 3개 버튼 + 테마 ===== */
+.tools{gap:8px}
+.tools button{font-size:18px;padding:12px 4px}
+.themebtn{display:block;margin:6px auto 0;padding:10px 20px;border-radius:999px;font-size:19px;font-weight:700;color:#ffe3a8;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,217,138,.5)}
+/* ===== 밝은 크림 테마 ===== */
+body.light{--ink:#2d2118;--card:#fff;--soft:#f3e9d6;--mute:#6b5744;--accent:#8c2f39;color:#2d2118;background:radial-gradient(1200px 600px at 50% -10%,#fff 0,#fbf5ea 60%) fixed}
+body.light::before{opacity:.55}
+body.light h1{color:#2d2118;text-shadow:none}
+body.light .sub,body.light .q,body.light .top{color:#6b5744}
+body.light .card{background:#fff;box-shadow:inset 0 0 0 2px rgba(201,161,91,.6),0 18px 36px -22px rgba(60,40,20,.35)}
+body.light .title{color:#2d2118;text-shadow:none}
+body.light .desc{background:#f3e9d6;color:#6b5744}
+body.light .top #prog,body.light .top .home{background:#f3e9d6;color:#2d2118;box-shadow:none}
+body.light .bar{background:#f3e9d6}
+body.light .tools button{background:#f3e9d6;color:#2d2118;box-shadow:none}
+body.light .opt{background:#fff;color:#2d2118;box-shadow:inset 0 0 0 2px rgba(201,161,91,.75),0 10px 20px -14px rgba(60,40,20,.4)}
+body.light .opt::before{background:#f3e9d6;color:#8c2f39}
+body.light .opt:disabled{background:#efe7d9;color:#9c8c78;box-shadow:none}
+body.light .opt.ok{background:#3f7d63;color:#fff}
+body.light .opt.ok::before{background:rgba(255,255,255,.25);color:#fff}
+body.light .slot{color:#8c2f39}
+body.light .slot.bad{color:#c0392b}
+body.light #pop,body.light #quit{background:rgba(45,33,24,.5)}
+body.light .pbox{background:#fff;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+body.light .pbox .t{color:#8c2f39}
+body.light .ans{color:#6b5744}
+body.light .ans b{color:#8c2f39}
+body.light .sbox{background:#fff;color:#6b5744;box-shadow:inset 0 0 0 2px rgba(201,161,91,.5)}
+body.light .sbox span{color:#8c2f39}
+body.light .rvh{color:#8c2f39}
+body.light .rv{background:#fff;box-shadow:inset 0 0 0 1px rgba(201,161,91,.5)}
+body.light .rv b{color:#2d2118}
+body.light #start.screen{color:#2d2118;background:radial-gradient(900px 520px at 50% -8%,#fff,transparent 60%),linear-gradient(180deg,#fff6e0,#f6e7c8)}
+body.light #start::before,body.light #start::after{opacity:.1}
+body.light .cover-title{color:#8c2f39;text-shadow:0 2px 0 rgba(201,161,91,.5)}
+body.light .eyebrow,body.light .pick,body.light .tag b{color:#8c2f39}
+body.light .tag{color:#6b5744}
+body.light .cbtn{background:#fff;color:#2d2118;box-shadow:inset 0 0 0 2px rgba(201,161,91,.75),0 14px 26px -16px rgba(60,40,20,.4)}
+body.light .cbtn em{background:#f3e9d6}
+body.light .cbtn small{color:#6b5744}
+body.light .cbtn.gold{background:linear-gradient(145deg,#e6bd6a,#b98a35);color:#2b1a0e}
+body.light .cbtn.gold small{color:#5a3d17}
+body.light .themebtn{color:#8c2f39;background:#fff;box-shadow:inset 0 0 0 1px rgba(201,161,91,.7)}
+</style>
+</head>
+<body>
+
+<section id="start" class="screen on">
+  <div class="lights"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="cover-in">
+    <div class="eyebrow">★ 추억의 노래 오디션 ★</div>
+    <div class="vinyl"><span>🎵</span></div>
+    <h1 class="cover-title">엄마 아빠의<br>트로트 퀴즈</h1>
+    <div class="tag">노래 한 소절에 추억이 소르르<br><b>100곡</b> 수록 · 틀려도 괜찮아요</div>
+    <div class="pick">무대에 오를 분을 골라주세요</div>
+    <button class="cbtn" onclick="startGame('mom')"><em>💃</em><span>엄마 혼자 하기</span></button>
+    <button class="cbtn" onclick="startGame('dad')"><em>🕺</em><span>아빠 혼자 하기</span></button>
+    <button class="cbtn gold" onclick="startGame('both')"><em>🎭</em><span>엄마 아빠 같이 하기<small>번갈아 한 문제씩!</small></span></button>
+    <button class="themebtn" id="themebtn" onclick="toggleTheme()"></button>
+  </div>
+</section>
+
+<section id="quiz" class="screen">
+  <div class="top"><button class="home" onclick="askQuit()">🎪 처음으로</button><span id="prog"></span></div>
+  <div class="bar"><i id="barfill"></i></div>
+  <div id="turn" class="turn"></div>
+  <div class="card">
+    <div class="q" id="qlabel"></div>
+    <div class="singer" id="singer"></div>
+    <div class="title" id="qtitle"></div>
+    <div class="slot" id="msg"></div>
+  </div>
+  <div class="tools">
+    <button id="btnSpeak" onclick="speak()">📢 읽어주기</button>
+    <button id="btnHint" onclick="showHint()">✨ 힌트 보기</button>
+    <button onclick="listen()">🎵 노래 듣기</button>
+  </div>
+  <div id="opts"></div>
+  <div class="desc" id="desc"></div>
+</section>
+
+<section id="result" class="screen">
+  <div style="font-size:84px">🎖️</div>
+  <h1 id="rtitle"></h1>
+  <div class="rank" id="rrank"></div>
+  <div class="sub" id="rmsg"></div>
+  <div class="score" id="rscore"></div>
+  <div class="review" id="rreview"></div>
+  <button class="big" onclick="startGame(mode)">🔁 처음부터 다시 하기</button>
+  <button class="big b2" onclick="goHome()">🎪 처음 화면으로</button>
+</section>
+
+<div id="pop"><div class="pbox"><div class="emo" id="pemo">🎉</div><div class="t" id="ptxt"></div>
+  <div class="ans" id="pinfo"></div>
+  <button class="listen" onclick="listen()">▶ 정답 노래 들어보기</button>
+  <button class="big b3" id="pnext" onclick="nextQ()">다음 무대 ▶</button></div></div>
+
+<div id="quit"><div class="pbox"><div class="t">그만할까요?</div><div class="ans">지금까지 푼 기록이 사라져요</div>
+  <button class="big b3" onclick="closeQuit()">계속할래요 😊</button>
+  <button class="big b2" onclick="goHome()">그만할래요</button></div></div>
+
+<script>
+// [가수, 곡 제목, 빈칸으로 만들 부분]
+const SONGS=[
+["이미자","동백 아가씨","동백"],["이미자","섬마을 선생님","선생님"],["이미자","흑산도 아가씨","흑산도"],
+["나훈아","홍시","홍시"],["나훈아","무시로","무시로"],["나훈아","잡초","잡초"],["나훈아","영영","영영"],
+["나훈아","고향역","고향"],["나훈아","물레방아 도는데","물레방아"],["나훈아","청춘을 돌려다오","청춘"],
+["남진","님과 함께","님과"],["남진","가슴 아프게","가슴"],["남진","당신이 좋아","당신"],["남진","빈 잔","빈 잔"],
+["현철","싫다 싫어","싫다"],["현철","봉선화 연정","봉선화"],
+["송대관","해뜰날","해뜰"],["송대관","네 박자","네 박자"],["송대관","유행가","유행"],
+["태진아","동반자","동반"],["태진아","옥경이","옥경"],["태진아","사랑은 아무나 하나","아무나"],
+["설운도","사랑의 트위스트","트위스트"],["설운도","잃어버린 정","잃어버린"],["설운도","다함께 차차차","차차차"],
+["주현미","신사동 그 사람","신사동"],["주현미","짝사랑","짝"],["주현미","비 내리는 영동교","영동교"],
+["김연자","아모르 파티","파티"],["김연자","수은등","수은"],
+["장윤정","어머나","어머"],["장윤정","초혼","초"],["장윤정","짠짜라","짠짜"],["장윤정","꽃","꽃"],
+["임영웅","이제 나만 믿어요","나만"],["임영웅","보금자리","보금"],["임영웅","별빛 같은 나의 사랑아","별빛"],["임영웅","우리들의 블루스","블루스"],
+["영탁","막걸리 한잔","막걸리"],["영탁","찐이야","찐"],
+["송가인","엄마 아리랑","아리랑"],["이찬원","진또배기","진또"],["이찬원","풍등","풍"],
+["조항조","남자라는 이유로","이유"],["박상철","무조건","무조"],["홍진영","사랑의 배터리","배터리"],
+["진성","안동역에서","안동"],["김수희","애모","애"],["하춘화","영암 아리랑","영암"],["심수봉","그때 그 사람","그 사람"],
+["장민호","남자는 말합니다","말합"],
+["이미자","여자의 일생","일생"],
+["이미자","열아홉 순정","열아홉"],
+["나훈아","테스형","테스"],
+["나훈아","어무이","어무이"],
+["나훈아","18세 순이","순이"],
+["남진","둥지","둥지"],
+["남진","상사화","상사"],
+["남진","마음이 고와야지","고와야지"],
+["배호","돌아가는 삼각지","삼각지"],
+["배호","안개 낀 장충단공원","장충단공원"],
+["배호","누가 울어","울어"],
+["남인수","가거라 삼팔선","삼팔선"],
+["남인수","애수의 소야곡","소야곡"],
+["최헌","오동잎","오동잎"],
+["최백호","낭만에 대하여","낭만"],
+["하춘화","잘했군 잘했어","잘했군"],
+["하춘화","물새 한 마리","물새"],
+["심수봉","무기여 잘 있거라","무기여"],
+["심수봉","백만송이 장미","백만송이"],
+["조용필","돌아와요 부산항에","부산항"],
+["조용필","허공","허공"],
+["설운도","누이","누이"],
+["설운도","쌈바의 여인","쌈바"],
+["주현미","또 만났네요","만났네요"],
+["김수희","남행열차","남행"],
+["김수희","멋진 인생","멋진"],
+["김수희","너무합니다","너무"],
+["송대관","차표 한 장","차표"],
+["태진아","거울도 안 보는 여자","거울도"],
+["태진아","미안 미안해","미안해"],
+["진성","보릿고개","보릿"],
+["진성","님의 등불","등불"],
+["진성","태클을 걸지마","태클"],
+["박현빈","샤방샤방","샤방"],
+["박현빈","곤드레 만드레","곤드레"],
+["장윤정","사랑아","사랑아"],
+["장윤정","올래","올래"],
+["홍진영","엄지 척","엄지"],
+["송가인","한 많은 대동강","대동강"],
+["임영웅","모래 알갱이","모래"],
+["임영웅","사랑은 늘 도망가","도망가"],
+["임영웅","다시 만날 수 있을까","만날"],
+["영탁","니가 왜 거기서 나와","거기서"],
+["영탁","포장마차","포장"],
+["박상철","자옥아","자옥"],
+["김세레나","갑돌이와 갑순이","갑순이"],
+["현인","신라의 달밤","달밤"],
+["이난영","목포의 눈물","목포"],
+["김정구","눈물 젖은 두만강","두만강"]
+].map(([singer,title,ans])=>({singer,title,ans}));
+// 곡 소개 (정답 단어가 들어가지 않게 작성)
+const DESC={
+"동백 아가씨":"1964년 발표된 이미자의 대표곡으로, 같은 이름의 영화로도 만들어졌어요.",
+"섬마을 선생님":"외딴 섬 학교에 온 젊은 교사를 그린 노래로, 영화로도 만들어졌어요.",
+"흑산도 아가씨":"전남 신안 바다 섬을 배경으로 한 이미자의 애절한 노래예요.",
+"홍시":"감을 보며 돌아가신 어머니를 그리워하는 마음을 담은 나훈아의 노래예요.",
+"무시로":"나훈아의 구성진 목소리가 돋보이는 대표 트로트예요.",
+"잡초":"길가에 피어나는 질긴 풀처럼 살아가는 인생을 노래한 나훈아의 곡이에요.",
+"영영":"떠난 사람을 그리는 나훈아의 애절한 사랑 노래예요.",
+"고향역":"시골 기차역과 코스모스 길을 떠올리게 하는 나훈아의 대표곡이에요.",
+"물레방아 도는데":"고향 마을의 풍경을 그리워하는 나훈아의 노래예요.",
+"청춘을 돌려다오":"흘러간 젊은 날을 그리워하는 나훈아의 노래예요.",
+"님과 함께":"1972년 발표, 남진 하면 떠오르는 최고의 히트곡이에요.",
+"가슴 아프게":"남진의 애틋한 이별 노래로 오랫동안 사랑받았어요.",
+"당신이 좋아":"남진 특유의 시원한 창법이 살아 있는 사랑 노래예요.",
+"빈 잔":"인생의 허전함을 술잔에 빗댄 남진의 노래예요.",
+"싫다 싫어":"현철 특유의 구성진 노래로 노래방 단골 곡이에요.",
+"봉선화 연정":"손톱에 물들이던 꽃을 소재로 한 현철의 노래예요.",
+"해뜰날":"힘든 시절 희망을 주었던 송대관의 대표곡이에요.",
+"네 박자":"빠른 리듬이 신나는 송대관의 흥겨운 노래예요.",
+"유행가":"삶과 노래를 이야기하는 송대관의 곡이에요.",
+"동반자":"인생길을 함께 걷는 부부를 노래한 태진아의 곡이에요.",
+"옥경이":"태진아의 대표 인기곡으로 노래방 단골이에요.",
+"사랑은 아무나 하나":"태진아의 흥겨운 대표곡으로 모두가 따라 부르는 노래예요.",
+"사랑의 트위스트":"몸이 절로 들썩이는 신나는 리듬의 설운도 노래예요.",
+"잃어버린 정":"그리운 마음을 담은 설운도의 대표곡이에요.",
+"다함께 차차차":"경쾌한 리듬으로 흥을 돋우는 설운도의 노래예요.",
+"신사동 그 사람":"주현미의 대표 히트곡으로 부드러운 목소리가 매력이에요.",
+"짝사랑":"혼자 마음 졸이는 사랑을 노래한 주현미의 곡이에요.",
+"비 내리는 영동교":"비 오는 날 떠오르는 주현미의 애절한 노래예요.",
+"아모르 파티":"김연자의 신나는 댄스 트로트로 젊은 세대도 좋아해요.",
+"수은등":"쓸쓸한 밤거리를 비추는 불빛을 노래한 김연자의 곡이에요.",
+"어머나":"2004년 발표, 장윤정을 일약 스타로 만든 노래예요.",
+"초혼":"애절한 감성이 가득한 장윤정의 노래예요.",
+"짠짜라":"흥이 넘치는 장윤정의 신나는 노래예요.",
+"꽃":"장윤정이 부른 서정적인 사랑 노래예요.",
+"이제 나만 믿어요":"임영웅이 부른 든든한 응원 같은 노래예요.",
+"보금자리":"임영웅의 따뜻한 감성이 돋보이는 곡이에요.",
+"별빛 같은 나의 사랑아":"임영웅이 부른 서정적인 사랑 노래예요.",
+"우리들의 블루스":"임영웅의 감성 짙은 목소리가 돋보이는 노래예요.",
+"막걸리 한잔":"영탁의 흥겨운 인기곡으로 미스터트롯에서 사랑받았어요.",
+"찐이야":"영탁의 신나는 응원가 같은 노래예요.",
+"엄마 아리랑":"어머니를 그리는 송가인의 애틋한 노래예요.",
+"진또배기":"이찬원이 부른 흥겨운 노래로, 동해안의 솟대를 뜻하는 말이에요.",
+"풍등":"하늘로 띄우는 소원을 담은 이찬원의 노래예요.",
+"남자라는 이유로":"조항조 특유의 중후한 목소리가 돋보이는 노래예요.",
+"무조건":"박상철의 흥겨운 노래로 잔치 자리에서 꼭 나와요.",
+"사랑의 배터리":"홍진영의 통통 튀는 댄스 트로트예요.",
+"안동역에서":"기다리는 마음을 담은 진성의 노래예요.",
+"애모":"김수희의 구슬픈 대표곡이에요.",
+"영암 아리랑":"하춘화의 대표곡이에요.",
+"그때 그 사람":"심수봉의 감성 짙은 대표곡이에요.",
+"남자는 말합니다":"장민호의 대표 인기곡이에요.",
+"여자의 일생":"많은 여인의 삶을 담아 오랫동안 사랑받은 이미자의 곡이에요.",
+"열아홉 순정":"풋풋한 마음을 담은 이미자의 노래예요.",
+"테스형":"2020년 발표되어 큰 화제가 된 나훈아의 노래예요.",
+"어무이":"어머니를 그리워하는 마음을 담은 나훈아의 노래예요.",
+"18세 순이":"나훈아의 풋풋하고 경쾌한 초기 히트곡이에요.",
+"둥지":"남진의 감성이 담긴 대표 노래예요.",
+"상사화":"이루어지지 못하는 사랑을 꽃에 빗댄 남진의 노래예요.",
+"마음이 고와야지":"남진이 부른 정겨운 노래예요.",
+"돌아가는 삼각지":"서울의 지명을 노래한 배호의 대표곡이에요.",
+"안개 낀 장충단공원":"배호의 깊은 저음이 돋보이는 대표곡이에요.",
+"누가 울어":"배호의 구슬픈 노래예요.",
+"가거라 삼팔선":"분단의 아픔을 담은 남인수의 노래예요.",
+"애수의 소야곡":"옛 가요를 대표하는 남인수의 명곡이에요.",
+"오동잎":"최헌의 부드러운 목소리가 돋보이는 노래예요.",
+"낭만에 대하여":"최백호의 중후한 목소리가 인상적인 노래예요.",
+"잘했군 잘했어":"하춘화의 신나는 노래예요.",
+"물새 한 마리":"하춘화의 대표곡 중 하나예요.",
+"무기여 잘 있거라":"심수봉의 감성이 가득한 노래예요.",
+"백만송이 장미":"심수봉이 부른 아름다운 사랑 노래예요.",
+"돌아와요 부산항에":"조용필이 부른 고향을 그리는 노래예요.",
+"허공":"조용필의 애절한 목소리가 인상적인 노래예요.",
+"누이":"가족을 그리워하는 설운도의 노래예요.",
+"쌈바의 여인":"설운도의 흥겨운 리듬이 신나는 노래예요.",
+"또 만났네요":"주현미의 경쾌한 노래예요.",
+"남행열차":"신나는 리듬으로 사랑받은 김수희의 노래예요.",
+"멋진 인생":"김수희의 힘찬 응원가예요.",
+"너무합니다":"김수희의 애달픈 노래예요.",
+"차표 한 장":"송대관이 부른 이별 노래예요.",
+"거울도 안 보는 여자":"태진아의 재치 있는 노래예요.",
+"미안 미안해":"태진아의 경쾌한 노래예요.",
+"보릿고개":"어려웠던 시절을 노래한 진성의 곡이에요.",
+"님의 등불":"진성이 부른 따뜻한 위로의 노래예요.",
+"태클을 걸지마":"진성의 신나는 응원가예요.",
+"샤방샤방":"박현빈의 경쾌한 댄스 트로트예요.",
+"곤드레 만드레":"박현빈의 흥겨운 노래예요.",
+"사랑아":"장윤정의 애절한 사랑 노래예요.",
+"올래":"장윤정의 신나는 노래예요.",
+"엄지 척":"홍진영의 밝고 신나는 노래예요.",
+"한 많은 대동강":"송가인의 애절한 창법이 돋보이는 노래예요.",
+"모래 알갱이":"임영웅의 감성이 담긴 노래예요.",
+"사랑은 늘 도망가":"임영웅이 부른 아련한 사랑 노래예요.",
+"다시 만날 수 있을까":"임영웅의 서정적인 노래예요.",
+"니가 왜 거기서 나와":"영탁의 유쾌한 노래예요.",
+"포장마차":"영탁의 구수한 감성이 담긴 노래예요.",
+"자옥아":"박상철의 흥겨운 노래예요.",
+"갑돌이와 갑순이":"예로부터 전해 온 민요풍의 재미난 노래예요.",
+"신라의 달밤":"해방 전후 큰 사랑을 받은 현인의 명곡이에요.",
+"목포의 눈물":"일제강점기를 대표하는 이난영의 명곡이에요.",
+"눈물 젖은 두만강":"김정구가 부른 옛 가요의 대표곡이에요."
+};
+SONGS.forEach(s=>s.desc=DESC[s.title]||'');
+
+const NAME={mom:"엄마",dad:"아빠"};
+const PRAISE={
+ mom:["우리 엄마 최고!","우리 엄마 명가수!","역시 우리 엄마!","엄마 대단해요!"],
+ dad:["우리 아빠 최고!","우리 아빠 명가수!","역시 우리 아빠!","아빠 대단해요!"],
+ both:["두 분 호흡이 환상이에요!","역시 우리 엄마 아빠!","두 분 최고예요!","짝짝짝! 명콤비!"]};
+let mode,qs,types,idx,turn,score,tried,qtype,cur;
+const $=id=>document.getElementById(id);
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
+function goHome(){stopVoice();$('pop').classList.remove('on');$('quit').classList.remove('on');show('start')}
+
+const CH="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+const chosung=str=>[...str].map(c=>{const n=c.charCodeAt(0)-0xAC00;return n>=0&&n<11172?CH[Math.floor(n/588)]:c}).join('');
+const pickWrong=(pool,ans,n)=>shuffle(pool.filter(x=>x!==ans)).sort((a,b)=>Math.abs(a.length-ans.length)-Math.abs(b.length-ans.length)+(Math.random()-.5)*3).slice(0,n);
+
+const JUDGE=["합격! 심사위원 전원 기립박수!","심사위원 모두 하트를 눌렀어요!","이 무대, 방송 나가도 되겠는데요?","소름 돋았어요! 완벽해요!"];
+const RETRY=["아깝다! 심사위원이 한 번 더 기회를 줬어요 😊","거의 다 왔어요! 다시 골라보세요 😊","괜찮아요! 천천히 다시 골라보세요 😊"];
+
+function askQuit(){$('quit').classList.add('on')}
+function closeQuit(){$('quit').classList.remove('on')}
+function applyTheme(l){document.body.classList.toggle('light',l);const b=$('themebtn');if(b)b.textContent=l?'🌙 어두운 화면으로 보기':'☀️ 밝은 화면으로 보기'}
+function toggleTheme(){const l=!document.body.classList.contains('light');applyTheme(l);try{localStorage.setItem('light',l?'1':'0')}catch(e){}}
+let missed=[];
+function startGame(m){missed=[];
+  mode=m;qs=shuffle(SONGS).slice(0,10);
+  types=shuffle(['title','title','title','title','title','singer','singer','singer','singer','singer']);
+  idx=0;turn=m==='dad'?'dad':'mom';score={mom:0,dad:0};
+  show('quiz');render();
+}
+function render(){
+  stopVoice();const s=qs[idx];tried=false;qtype=types[idx];
+  $('barfill').style.width=((idx+1)*10)+'%';$('prog').textContent=`${idx+1} / 10 무대`;
+  $('turn').textContent=mode==='both'?`${turn==='mom'?'💃 엄마':'🕺 아빠'} 차례예요!`:`${mode==='mom'?'💃 엄마':'🕺 아빠'}, 힘내세요!`;
+  const titles=SONGS.map(x=>x.title),singers=[...new Set(SONGS.map(x=>x.singer))],words=[...new Set(SONGS.map(x=>x.ans))];
+  $('singer').style.display='';$('desc').style.display='';
+  $('singer').textContent='🎤 '+s.singer;
+  $('desc').textContent=s.desc?'📜 '+s.desc:'';
+  if(qtype==='blank'){
+    $('qlabel').textContent='🎶 빈칸에 들어갈 말은 무엇일까요?';
+    $('qtitle').innerHTML=s.title.replace(s.ans,'<span class="blank">&nbsp;</span>');
+    cur={ans:s.ans,opts:[s.ans,...pickWrong(words,s.ans,2)],hint:chosung(s.ans)};
+  }else if(qtype==='chosung'){
+    $('qlabel').textContent='🎶 초성을 보고 노래 제목을 맞혀보세요!';
+    $('qtitle').innerHTML='<span class="cho">'+chosung(s.title)+'</span>';$('desc').style.display='none';
+    cur={ans:s.title,opts:[s.title,...pickWrong(titles,s.title,2)],hint:'첫 글자는 "'+s.title[0]+'"'};
+  }else if(qtype==='title'){
+    $('qlabel').textContent='🎶 이 가수의 노래는 무엇일까요?';
+    $('singer').style.display='none';
+    $('qtitle').textContent='🎤 '+s.singer;
+    cur={ans:s.title,opts:[s.title,...pickWrong(titles,s.title,2)]};
+  }else{
+    $('qlabel').textContent='🎶 이 노래는 누구의 노래일까요?';
+    $('qtitle').textContent=s.title;
+    $('singer').style.display='none';$('desc').style.display='none';
+    cur={ans:s.singer,opts:[s.singer,...pickWrong(singers,s.singer,2)],hint:chosung(s.singer)};
+  }
+  $('msg').textContent='';$('msg').className='slot';$('btnHint').disabled=false;
+  $('opts').innerHTML='';
+  shuffle(cur.opts).forEach(o=>{
+    const b=document.createElement('button');b.className='opt';b.dataset.v=o;
+    b.textContent=(qtype==='blank'&&s.title!==s.ans)?s.title.replace(s.ans,o):o;
+    {const n=b.textContent.length;b.style.fontSize=n<=7?'31px':n<=9?'27px':'24px'}
+    b.onclick=()=>pick(b,o);$('opts').appendChild(b);
+  });
+}
+function pick(btn,o){
+  if(o===cur.ans){
+    stopVoice();btn.classList.add('ok');dingdong();setTimeout(applause,350);
+    if(!tried)score[turn]++;
+    document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+    $('pemo').textContent=rnd(['🎊','🌟','💐','🥇']);
+    $('ptxt').textContent=tried?'끝까지 해내셨어요!\n두 번째 도전 성공! 👏':(mode==='both'?(turn==='mom'?'💃 엄마':'🕺 아빠')+' 정답!':rnd(PRAISE[mode]))+'\n'+rnd(JUDGE);
+    $('pinfo').innerHTML='<b>'+qs[idx].title+'</b>'+qs[idx].singer+(qs[idx].desc?'<br><small>'+qs[idx].desc+'</small>':'');
+    $('ptxt').style.whiteSpace='pre-line';
+    $('pnext').textContent=idx===9?'결과 보기 ▶':'다음 무대 ▶';
+    setTimeout(()=>$('pop').classList.add('on'),600);
+  }else{
+    if(!tried)missed.push({s:qs[idx],who:turn});tried=true;btn.disabled=true;boop();
+    $('msg').textContent=rnd(RETRY);$('msg').className='slot bad';
+  }
+}
+function nextQ(){
+  $('pop').classList.remove('on');stopVoice();
+  if(idx===9){return finish()}
+  idx++;if(mode==='both')turn=turn==='mom'?'dad':'mom';render();
+}
+function rankOf(t){return t>=9?['👑','국민가수'] : t>=7?['🌟','인기가수'] : t>=4?['🎤','신인가수'] : ['🌱','연습생']}
+function finish(){
+  show('result');
+  const T=mode==='both'?score.mom+score.dad:score[mode];
+  const [ri,rn]=rankOf(T);
+  $('rrank').innerHTML='<span>'+ri+'</span> '+(mode==='both'?'오늘의 '+rn+' 듀오':'오늘의 '+rn);
+  if(mode==='both'){
+    $('rtitle').textContent='두 분 호흡이 환상이에요!';
+    const d=score.mom-score.dad;
+    $('rmsg').textContent=(d===0?'무승부! 두 분 실력이 똑같아요 🤝':d>0?'엄마가 한 끗 앞섰어요! 아빠도 끝까지 멋졌어요 😄':'아빠가 한 끗 앞섰어요! 엄마도 끝까지 멋졌어요 😄')+(score.mom+score.dad>=9?' 두 분 다 백점!':'');
+    $('rscore').innerHTML='<div class="sbox">💃 엄마<small>5문제 중</small><span>'+score.mom+'개</span></div><div class="sbox">🕺 아빠<small>5문제 중</small><span>'+score.dad+'개</span></div>';
+  }else{
+    $('rtitle').textContent=mode==='mom'?'우리 엄마 최고!':'우리 아빠 명가수!';
+    $('rmsg').textContent='10개 무대를 모두 완주하셨어요! 정말 대단해요 👏';
+    $('rscore').innerHTML='<div class="sbox">한 번에 맞힌 개수<small>10문제 중</small><span>'+T+'개</span></div>';
+  }
+  $('rreview').innerHTML=missed.length
+    ?'<div class="rvh">🎼 다시 들어보면 좋은 노래</div>'+missed.map(m=>'<div class="rv"><b>'+m.s.title+'</b><span>'+m.s.singer+'</span></div>').join('')
+    :'<div class="rvh">🎉 한 곡도 안 틀렸어요! 대단해요</div>';
+  chime();setTimeout(applause,500);
+}
+function showHint(){
+  const w=[...document.querySelectorAll('.opt')].filter(b=>b.dataset.v!==cur.ans&&!b.disabled);
+  if(!w.length)return;
+  const b=rnd(w);b.disabled=true;b.classList.add('gone');
+  $('msg').textContent='✨ 틀린 보기 하나를 지웠어요!';$('msg').className='slot';$('btnHint').disabled=true;
+}
+function listen(){
+  const s=qs[idx];
+  window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(s.singer+' '+s.title),'_blank','noopener');
+}
+let voiceAudio,voiceTok=0,voiceOn=false;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function setSpeakBtn(){$('btnSpeak').textContent=voiceOn?'⏹ 멈추기':'📢 읽어주기'}
+function stopVoice(){voiceTok++;voiceOn=false;if(voiceAudio){voiceAudio.pause();voiceAudio=null}if('speechSynthesis' in window)speechSynthesis.cancel();setSpeakBtn()}
+function playOne(url,tok){return new Promise((res,rej)=>{if(tok!==voiceTok)return;const a=new Audio(url);voiceAudio=a;a.onended=()=>res();a.onerror=()=>rej(new Error('audio'));a.play().catch(rej)})}
+function optClip(v){
+  const singers=[...new Set(SONGS.map(x=>x.singer))],words=[...new Set(SONGS.map(x=>x.ans))];
+  if(qtype==='blank')return 'audio/w/'+(words.indexOf(v)+1)+'.mp3';
+  if(qtype==='chosung'||qtype==='title')return 'audio/t/'+(SONGS.findIndex(x=>x.title===v)+1)+'.mp3';
+  return 'audio/p/'+(singers.indexOf(v)+1)+'.mp3';
+}
+async function speak(){
+  if(voiceOn){stopVoice();return}
+  stopVoice();const tok=voiceTok;voiceOn=true;setSpeakBtn();
+  const s=qs[idx],n=SONGS.indexOf(s)+1;
+  const seq=[qtype==='title'?'audio/b/'+n+'.mp3':qtype==='blank'?'audio/'+String(n).padStart(2,'0')+'.mp3':qtype==='chosung'?'audio/c/'+n+'.mp3':'audio/s/'+n+'.mp3'];
+  [...document.querySelectorAll('.opt')].forEach((b,i)=>{if(!b.disabled)seq.push('audio/n/'+(i+1)+'.mp3',optClip(b.dataset.v))});
+  try{for(const u of seq){if(tok!==voiceTok)return;await playOne(u,tok);await sleep(200)}}
+  catch(e){if(tok===voiceTok)await speakTTS(s)}
+  if(tok===voiceTok){voiceOn=false;setSpeakBtn()}
+}
+function speakTTS(s){
+  return new Promise(res=>{
+    if(!('speechSynthesis' in window)){$('msg').textContent='이 폰은 읽어주기를 지원하지 않아요';return res()}
+    speechSynthesis.cancel();
+    const ops=[...document.querySelectorAll('.opt')].filter(b=>!b.disabled).map((b,i)=>['하나','둘','셋'][i]+', '+b.dataset.v).join('. ');
+    const lines=qtype==='blank'?[s.singer+' 가수님의 노래예요!','제목은, '+s.title.replace(s.ans,'음, 빈칸')+', 이랍니다!',ops]
+     :qtype==='chosung'?[s.singer+' 가수님의 노래예요!','화면의 초성을 보고, 노래 제목을 맞혀보세요!',ops]
+     :qtype==='title'?[s.singer+' 가수님의 노래예요!','어떤 노래인지 맞혀보세요!',ops]
+     :['제목은, '+s.title+'!','이 노래는 누구의 노래일까요?',ops];
+    const v=bestVoice();
+    lines.forEach((t,i)=>{const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';if(v)u.voice=v;u.rate=.95;u.pitch=1.15;if(i===lines.length-1)u.onend=()=>res();speechSynthesis.speak(u)});
+  });
+}
+try{applyTheme(localStorage.getItem('light')!=='0')}catch(e){applyTheme(true)}
+function applause(){
+  ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+  const len=Math.floor(ac.sampleRate*1.6),buf=ac.createBuffer(1,len,ac.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<len;i++){const env=Math.min(1,i/2000)*Math.max(0,1-i/len);d[i]=(Math.random()*2-1)*env*(Math.random()>.55?1:.25)}
+  const src=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();
+  src.buffer=buf;f.type='bandpass';f.frequency.value=2800;f.Q.value=.6;g.gain.value=.5;
+  src.connect(f);f.connect(g);g.connect(ac.destination);src.start();
+}
+// 가장 자연스러운 한국어 음성 고르기 (신경망/구글/여성 음성 우선)
+function bestVoice(){
+  const ko=speechSynthesis.getVoices().filter(v=>/^ko/i.test(v.lang));
+  const rank=v=>{const n=v.name;let r=0;
+    if(/natural|neural|online/i.test(n))r+=10;
+    if(/google/i.test(n))r+=6;
+    if(/sun-?hi|yuna|유나|선히|heami|혜미/i.test(n))r+=4;
+    if(!v.localService)r+=1;return r};
+  return ko.sort((a,b)=>rank(b)-rank(a))[0]||null;
+}
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+// 효과음 (Web Audio)
+let ac;
+function tone(f,t,d,type='sine',v=.25){
+  ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;
+  const st=ac.currentTime+t;g.gain.setValueAtTime(v,st);g.gain.exponentialRampToValueAtTime(.001,st+d);
+  o.connect(g);g.connect(ac.destination);o.start(st);o.stop(st+d);
+}
+function dingdong(){tone(1318,0,.5);tone(1046,.25,.5);tone(1568,.5,.8)} // 딩동댕
+function boop(){tone(330,0,.25,'triangle',.18);tone(262,.18,.3,'triangle',.18)}
+function chime(){[523,659,784,1046,1318].forEach((f,i)=>tone(f,i*.15,.5))}
+</script>
+</body>
+</html>
