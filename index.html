@@ -613,7 +613,7 @@ function speakTTS(s){
   return new Promise(res=>{
     if(!('speechSynthesis' in window)){$('msg').textContent='이 폰은 읽어주기를 지원하지 않아요';return res()}
     speechSynthesis.cancel();
-    const ops=[...document.querySelectorAll('.opt')].filter(b=>!b.disabled).map((b,i)=>['하나','둘','셋'][i]+', '+b.dataset.v).join('. ');
+    const ops=[...document.querySelectorAll('.opt')].filter(b=>!b.disabled).map((b,i)=>['일','이','삼'][i]+', '+b.dataset.v).join('. ');
     const lines=qtype==='blank'?[s.singer+' 가수님의 노래예요!','제목은, '+s.title.replace(s.ans,'음, 빈칸')+', 이랍니다!',ops]
      :qtype==='chosung'?[s.singer+' 가수님의 노래예요!','화면의 초성을 보고, 노래 제목을 맞혀보세요!',ops]
      :qtype==='title'?[s.singer+' 가수님의 노래예요!','어떤 노래인지 맞혀보세요!',ops]
