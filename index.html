@@ -592,7 +592,7 @@ let voiceAudio,voiceTok=0,voiceOn=false;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function setSpeakBtn(){$('btnSpeak').textContent=voiceOn?'⏹ 멈추기':'📢 읽어주기'}
 function stopVoice(){voiceTok++;voiceOn=false;if(voiceAudio){voiceAudio.pause();voiceAudio=null}if('speechSynthesis' in window)speechSynthesis.cancel();setSpeakBtn()}
-function playOne(url,tok){return new Promise((res,rej)=>{if(tok!==voiceTok)return;const a=new Audio(url);voiceAudio=a;a.onended=()=>res();a.onerror=()=>rej(new Error('audio'));a.play().catch(rej)})}
+function playOne(url,tok){return new Promise((res,rej)=>{if(tok!==voiceTok)return;const a=new Audio(url+'?v=3');voiceAudio=a;a.onended=()=>res();a.onerror=()=>rej(new Error('audio'));a.play().catch(rej)})}
 function optClip(v){
   const singers=[...new Set(SONGS.map(x=>x.singer))],words=[...new Set(SONGS.map(x=>x.ans))];
   if(qtype==='blank')return 'audio/w/'+(words.indexOf(v)+1)+'.mp3';
